@@ -10,8 +10,6 @@ class MyErrors(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
 
-    pass
-
 
 class IntegerRange:
     def __init__(self, min_amount: int, max_amount: int) -> None:
@@ -21,10 +19,9 @@ class IntegerRange:
     def __set_name__(self, owner: type, name: str) -> None:
         self.protected_name = f"_{name}"
 
-    def __get__(self,
-                instance: SlideLimitationValidator,
-                owner: type
-                ) -> str | int:
+    def __get__(
+        self, instance: SlideLimitationValidator, owner: type
+    ) -> str | int:
         return getattr(instance, self.protected_name)
 
     def __set__(self, instance: SlideLimitationValidator, value: int) -> None:
@@ -32,9 +29,11 @@ class IntegerRange:
         if not isinstance(value, int):
             raise MyErrors(f"{value} should be int")
         if value not in range(self.min_amount, self.max_amount + 1):
-            raise MyErrors(f"{self.protected_name}"
-                           f" = {value} not in range between"
-                           f" {self.min_amount} and {self.max_amount}")
+            raise MyErrors(
+                f"{self.protected_name}"
+                f" = {value} not in range between"
+                f" {self.min_amount} and {self.max_amount}"
+            )
 
 
 class Visitor:
@@ -65,9 +64,9 @@ class AdultSlideLimitationValidator(SlideLimitationValidator):
 
 
 class Slide:
-    def __init__(self,
-                 name: str,
-                 limitation_class: Callable[int, int, int]) -> None:
+    def __init__(
+        self, name: str, limitation_class: Callable[int, int, int]
+    ) -> None:
         self.name = name
         self.limitation_class = limitation_class
 
@@ -75,10 +74,6 @@ class Slide:
         try:
             self.limitation_class(visitor.age, visitor.height, visitor.weight)
             return True
-        except MyErrors as e:
-            print(e)
+        except MyErrors as e_info:
+            print(e_info)
             return False
-
-
-if __name__ == "__main__":
-    pass
